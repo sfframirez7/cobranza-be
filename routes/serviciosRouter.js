@@ -36,8 +36,8 @@ serviciosRouter.post('/new', tokenService.validar_token_admin, (req, res) => {
 
 
     var servicioModel = req.body.servicio;
-    var payload = tokenService.token_payload(req.headers['token'])
-    servicioModel.UsuarioCreaId = payload.id
+    var data = tokenService.token_payload(req.headers['token'])
+    servicioModel.UsuarioCreaId = data.payload.id
 
     serviciosService.new(servicioModel)
         .then((resp) => {
