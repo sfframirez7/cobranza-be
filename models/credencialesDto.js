@@ -1,0 +1,6 @@
+
+var ICredenciales = {
+
+    Usuario : "",
+    Password : "",
+}
