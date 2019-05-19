@@ -14,6 +14,7 @@ const visitaRouter = require('./visitaRouter');
 const anuncioRouter = require('./anunciosRouter');
 const viviendaRouter = require('./viviendaRouter');
 const pantallaRouter = require('./pantallaRouter');
+const emailaRouter = require('./emailRouter');
 
 
 
@@ -30,5 +31,6 @@ routes.use('/visita', visitaRouter)
 routes.use('/anuncios', anuncioRouter)
 routes.use('/vivienda', viviendaRouter)
 routes.use('/pantalla', pantallaRouter)
+routes.use('/email', emailaRouter)
 
 module.exports = routes

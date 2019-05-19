@@ -88,7 +88,7 @@ var facturaService = {
                         paranoid: false,
                         include: [{
                             model: BD.Persona,
-                            attributes: ['id', 'NoIdentidad', 'Nombre', 'Apellido', 'correo'],
+                            attributes: ['id', 'NoIdentidad', 'Nombre', 'Apellido', 'Correo'],
                             paranoid: false
                         }],
                     },
@@ -139,10 +139,13 @@ var facturaService = {
 
     facturasBypersona: async function(personaId) {
 
+        var persona = await BD.Usuario.findOne({ where: { id: personaId } })
+
+
         var viviendas = []
         var respuesta = await BD.Vivienda.findAll({
             attributes: ['id'],
-            where: { personaId: personaId },
+            where: { personaId: persona.PersonaId },
             paranoid: false
         })
 
@@ -191,6 +194,7 @@ var facturaService = {
             });
     },
 
+
     facturas_ByPeriodo: function(anio, mes) {
 
         return BD.Factura.findAll({
@@ -202,7 +206,98 @@ var facturaService = {
                     paranoid: false,
                     include: [{
                         model: BD.Persona,
-                        attributes: ['id', 'Nombre', 'Apellido'],
+                        attributes: ['id', 'Nombre', 'Apellido', 'Correo'],
+                        paranoid: false,
+                    }]
+                }],
+            })
+            .then((facturas) => {
+                return facturas
+
+            }).catch((err) => {
+                throw { error: true, message: err }
+            });
+    },
+
+
+    facturas__pagadas_ByFecha: function(fechaDesde, fechaHasta) {
+
+        return BD.Factura.findAll({
+                where: {
+                    FechaPago: {
+                        [Op.between]: [fechaDesde, fechaHasta]
+                    },
+                    Pagada: 1,
+                    Anulada: 0
+                },
+                paranoid: false,
+                include: [{
+                    model: BD.Vivienda,
+                    attributes: ['id', 'personaId'],
+                    paranoid: false,
+                    include: [{
+                        model: BD.Persona,
+                        attributes: ['id', 'Nombre', 'Apellido', 'Correo'],
+                        paranoid: false,
+                    }]
+                }],
+            })
+            .then((facturas) => {
+                return facturas
+
+            }).catch((err) => {
+                throw { error: true, message: err }
+            });
+    },
+
+
+    facturas__sinPagar_ByFecha: function(fechaDesde, fechaHasta) {
+
+        return BD.Factura.findAll({
+                where: {
+                    createdAt: {
+                        [Op.between]: [fechaDesde, fechaHasta]
+                    },
+                    Pagada: 0
+                },
+                paranoid: false,
+                include: [{
+                    model: BD.Vivienda,
+                    attributes: ['id', 'personaId'],
+                    paranoid: false,
+                    include: [{
+                        model: BD.Persona,
+                        attributes: ['id', 'Nombre', 'Apellido', 'Correo'],
+                        paranoid: false,
+                    }]
+                }],
+            })
+            .then((facturas) => {
+                return facturas
+
+            }).catch((err) => {
+                throw { error: true, message: err }
+            });
+    },
+
+
+
+    facturas__todas_ByFecha: function(fechaDesde, fechaHasta) {
+
+        return BD.Factura.findAll({
+                where: {
+                    createdAt: {
+                        [Op.between]: [fechaDesde, fechaHasta]
+                    }
+                },
+                paranoid: false,
+                include: [{
+                    model: BD.Vivienda,
+                    attributes: ['id', 'personaId'],
+                    paranoid: false,
+                    include: [{
+                        model: BD.Persona,
+                        attributes: ['id', 'Nombre', 'Apellido', 'Correo'],
                         paranoid: false,
                     }]
                 }],
@@ -214,6 +309,8 @@ var facturaService = {
                 throw { error: true, message: err }
             });
     }
+
+
 
 
 
@@ -321,7 +418,7 @@ function factura_mapper(IFactura) {
         Pagada: IFactura.Pagada,
         FormaPagoId: IFactura.FormaPagoId,
         FechaPago: IFactura.FechaPago,
-        UsuarioRealizaCobroId: IFactura.UsuarioRealizaCobroId,
+        UsuarioRealizaCobroId: 0,
         Anulada: IFactura.Anulada,
         FechaAnulada: IFactura.FechaAnulada,
         UsuarioAnulaId: IFactura.UsuarioAnulaId,

@@ -120,6 +120,56 @@ facturaRouter.get('/ByPeriodo/:anio/:mes', tokenService.validar_token, (req, res
 
 });
 
+facturaRouter.get('/pagadas/:desde/:hasta', tokenService.validar_token_admin, (req, res) => {
+
+    var fechaDesde = req.params.desde
+    var fechaHasta = req.params.hasta
+
+    console.log(fechaDesde, fechaHasta);
+
+    facturaService.facturas__pagadas_ByFecha(fechaDesde, fechaHasta)
+        .then((result) => {
+            res.json(result)
+        }).catch((err) => {
+            res.status(400).json(err)
+        });
+
+});
+
+
+facturaRouter.get('/sinPagar/:desde/:hasta', tokenService.validar_token_admin, (req, res) => {
+
+    var fechaDesde = req.params.desde
+    var fechaHasta = req.params.hasta
+
+    console.log(fechaDesde, fechaHasta);
+
+    facturaService.facturas__sinPagar_ByFecha(fechaDesde, fechaHasta)
+        .then((result) => {
+            res.json(result)
+        }).catch((err) => {
+            res.status(400).json(err)
+        });
+
+});
+
+
+facturaRouter.get('/todas/:desde/:hasta', tokenService.validar_token_admin, (req, res) => {
+
+    var fechaDesde = req.params.desde
+    var fechaHasta = req.params.hasta
+
+    console.log(fechaDesde, fechaHasta);
+
+    facturaService.facturas__todas_ByFecha(fechaDesde, fechaHasta)
+        .then((result) => {
+            res.json(result)
+        }).catch((err) => {
+            res.status(400).json(err)
+        });
+
+});
+
 
 
 module.exports = facturaRouter

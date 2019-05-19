@@ -45,12 +45,9 @@ var viviendaService = {
 
         var pagosPendientes = await facturaService.facturas_pednientes_vivienda(viviendaId)
 
-        console.log(pagosPendientes);
 
         if (pagosPendientes && pagosPendientes.length > 0)
             throw { error: true, message: 'Esta vivienda tiene pagos pendientes' }
-        else
-            console.log("Sin pagos pendientes");
 
         return BD.Vivienda.destroy({
                 where: { id: viviendaId },
